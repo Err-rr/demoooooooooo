@@ -1,0 +1,1056 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { X, Play, BookOpen, Home } from 'lucide-react';
+
+interface LessonCard {
+  id: number;
+  title: string;
+  icon: string;
+  iconClass: string;
+  locked: boolean;
+  isActive?: boolean;
+  description?: string;
+  youtubeUrl?: string;
+  completed?: boolean;
+  points?: number;
+}
+
+const EcoShala: React.FC = () => {
+  const [lessons, setLessons] = useState<LessonCard[]>([
+    { 
+      id: 1, 
+      title: "Introduction to Environmental Studies", 
+      icon: "🧬", 
+      iconClass: "intro", 
+      locked: false, 
+      isActive: true,
+      completed: false,
+      points: 100,
+      description: "Master the fundamentals of environmental science and discover how natural systems work. Understand the complex interactions between living organisms and their environment in this comprehensive introduction.",
+      youtubeUrl: "https://youtu.be/7G3eXI_DPn8?si=vsQtsr50RADxvWEd"
+    },
+    { 
+      id: 2, 
+      title: " Ecosystem Basics ", 
+      icon: "🦋", 
+      iconClass: "keys", 
+      locked: true,
+      completed: false,
+      points: 120,
+      description: "Dive into the intricate web of life across different ecosystems. Learn about species diversity, ecological relationships, and the critical importance of preserving natural habitats for future generations.",
+      youtubeUrl: "https://youtu.be/sKJoXdrOT70?si=uA_jBvy-QevY1yHf"
+    },
+    { 
+      id: 3, 
+      title: " Biodiversity in India ", 
+      icon: "💧", 
+      iconClass: "practice", 
+      locked: true,
+      completed: false,
+      points: 90,
+      description: "Become a water conservation expert! Learn the water cycle, pollution sources, treatment methods, and practical strategies for sustainable water management in your daily life.",
+      youtubeUrl: "https://youtu.be/MLI3CFYr2zw?si=G7Z4nXqN5uhBxOej"
+    },
+    { 
+      id: 4, 
+      title: "Forest & Wildlife Resources ", 
+      icon: "🗂️", 
+      iconClass: "review", 
+      locked: true,
+      completed: false,
+      points: 110,
+      description: "Master the art of waste reduction, recycling, and proper disposal. Explore circular economy concepts and learn how to minimize environmental impact through better waste practices.",
+      youtubeUrl: "https://youtu.be/AlVlV3BPy_Y?si=VFcVdxKoMNdb-4gz"
+    },
+    { 
+      id: 5, 
+      title: "Environmental Pollution", 
+      icon: "🌪️", 
+      iconClass: "keys", 
+      locked: true,
+      completed: false,
+      points: 95,
+      description: "Study atmospheric science, air pollution sources, and their health impacts. Master monitoring techniques and understand policies designed to improve air quality worldwide.",
+      youtubeUrl: "https://youtu.be/zJ1DIgLN6yU?si=HSSd8dbtZXvp-Q2b"
+    },
+    { 
+      id: 6, 
+      title: "Disaster Management", 
+      icon: "⚡", 
+      iconClass: "home", 
+      locked: true,
+      completed: false,
+      points: 130,
+      description: "Explore cutting-edge renewable energy technologies including solar, wind, and hydroelectric power. Master energy efficiency and sustainable practices for modern living.",
+      youtubeUrl: "https://youtu.be/XIpHrXI_byU?si=gwyQef0q4bcJKqUA"
+    },
+    { 
+      id: 7, 
+      title: "Population and Environment ", 
+      icon: "🌡️", 
+      iconClass: "practice", 
+      locked: true,
+      completed: false,
+      points: 140,
+      description: "Understand the complex science behind climate change, its causes, effects, and potential solutions. Learn about global warming, greenhouse gases, and effective mitigation strategies.",
+      youtubeUrl: "https://youtu.be/xzb9ePICXGk?si=ok27xghyY9ML1AwT"
+    },
+    { 
+      id: 8, 
+      title: "Global Environmental Issues", 
+      icon: "🎯", 
+      iconClass: "play", 
+      locked: true,
+      completed: false,
+      points: 85,
+      description: "Interactive gameplay about personal carbon footprints. Discover how daily choices impact the environment and master strategies to reduce your ecological impact.",
+      youtubeUrl: "https://youtu.be/tu8hm949eBo?si=PdTjVwHs1xXTpFcP"
+    },
+    { 
+      id: 9, 
+      title: "Packaging Revolution", 
+      icon: "📋", 
+      iconClass: "keys", 
+      locked: true,
+      completed: false,
+      points: 75,
+      description: "Discover eco-friendly packaging alternatives, biodegradable materials, and the environmental impact of packaging waste. Explore innovative sustainable packaging solutions.",
+      youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    { 
+      id: 10, 
+      title: "Environmental Impact Assessment", 
+      icon: "🔬", 
+      iconClass: "review", 
+      locked: true,
+      completed: false,
+      points: 115,
+      description: "Master comprehensive evaluation of human activities' environmental consequences. Learn assessment methodologies and strategies for minimizing negative ecosystem impacts.",
+      youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    { 
+      id: 11, 
+      title: "Green Transportation Quest", 
+      icon: "🚲", 
+      iconClass: "practice", 
+      locked: true,
+      completed: false,
+      points: 105,
+      description: "Explore sustainable transportation revolution including electric vehicles, public transit optimization, cycling infrastructure, and strategies for reducing transportation emissions.",
+      youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    { 
+      id: 12, 
+      title: "Sustainable Agriculture Hero", 
+      icon: "🌾", 
+      iconClass: "keys", 
+      locked: true,
+      completed: false,
+      points: 125,
+      description: "Master farming practices that protect the environment while ensuring food security. Learn organic farming, permaculture principles, and regenerative agriculture techniques.",
+      youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    {
+      id: 13,
+      title: "Sustainable Cities Lab",
+      icon: "🏙️",
+      iconClass: "review",
+      locked: true,
+      completed: false,
+      points: 115,
+      description: "Urban sustainability, green buildings, smart grids, and resilient city planning for people and planet.",
+      youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    {
+      id: 14,
+      title: "Forests & Restoration",
+      icon: "🌳",
+      iconClass: "practice",
+      locked: true,
+      completed: false,
+      points: 100,
+      description: "Reforestation, afforestation, and forest management strategies to restore ecosystems and biodiversity.",
+      youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    {
+      id: 15,
+      title: "Sustainable Fashion",
+      icon: "👕",
+      iconClass: "keys",
+      locked: true,
+      completed: false,
+      points: 85,
+      description: "Explore textile lifecycles, ethical sourcing, low-impact dyes, and circular fashion business models.",
+      youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    {
+      id: 16,
+      title: "Food Systems & Nutrition",
+      icon: "🍎",
+      iconClass: "home",
+      locked: true,
+      completed: false,
+      points: 95,
+      description: "From farm to fork: nutrition, food waste reduction, and sustainable supply chains for healthy communities.",
+      youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    {
+      id: 17,
+      title: "Oceans & Marine Life",
+      icon: "🌊",
+      iconClass: "play",
+      locked: true,
+      completed: false,
+      points: 120,
+      description: "Marine ecosystems, plastic pollution, coral reefs, and coastal protection for ocean health.",
+      youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    {
+      id: 18,
+      title: "Sustainable Finance",
+      icon: "💹",
+      iconClass: "keys",
+      locked: true,
+      completed: false,
+      points: 110,
+      description: "Green bonds, ESG investing, carbon pricing, and funding mechanisms for climate solutions.",
+      youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    {
+      id: 19,
+      title: "Disaster Risk & Resilience",
+      icon: "🛡️",
+      iconClass: "review",
+      locked: true,
+      completed: false,
+      points: 125,
+      description: "Climate risks, adaptation planning, early warning systems, and resilient infrastructure design.",
+      youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    {
+      id: 20,
+      title: "Policy & Governance",
+      icon: "⚖️",
+      iconClass: "practice",
+      locked: true,
+      completed: false,
+      points: 130,
+      description: "International climate agreements, national policies, and local governance driving sustainability.",
+      youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    {
+      id: 21,
+      title: "Capstone: Eco Innovator",
+      icon: "🏅",
+      iconClass: "play",
+      locked: true,
+      completed: false,
+      points: 200,
+      description: "Synthesize all modules to design a practical, high-impact sustainability project and action plan.",
+      youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    }
+  ]);
+
+  const [activeDot, setActiveDot] = useState(0);
+  const [selectedLesson, setSelectedLesson] = useState<LessonCard | null>(null);
+
+  // Celebration modal state
+  const [celebrate, setCelebrate] = useState<{open: boolean; points: number; title: string}>({
+    open: false, points: 0, title: ''
+  });
+
+  // Simple confetti canvas
+  const confettiRef = useRef<HTMLCanvasElement | null>(null);
+  const confettiTimer = useRef<number | null>(null);
+
+  const fireConfetti = () => {
+    const canvas = confettiRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    canvas.width = w;
+    canvas.height = h;
+
+    const colors = ['#10b981', '#34d399', '#f59e0b', '#ef4444', '#3b82f6', '#8b5cf6'];
+    const parts = Array.from({ length: 180 }, () => ({
+      x: Math.random() * w,
+      y: -20 - Math.random() * 100,
+      r: 4 + Math.random() * 6,
+      c: colors[Math.floor(Math.random() * colors.length)],
+      s: 1 + Math.random() * 3,
+      a: Math.random() * 2 * Math.PI
+    }));
+
+    let t = 0;
+    const draw = () => {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, w, h);
+      parts.forEach(p => {
+        p.y += p.s + 2;
+        p.x += Math.sin((t + p.a) / 10) * 2;
+        ctx.fillStyle = p.c;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      t += 1;
+      if (t < 160) {
+        confettiTimer.current = requestAnimationFrame(draw);
+      } else {
+        ctx.clearRect(0, 0, w, h);
+      }
+    };
+    draw();
+  };
+
+  const calculateStats = () => {
+    const completed = lessons.filter(lesson => lesson.completed).length;
+    const totalPoints = lessons
+      .filter(lesson => lesson.completed)
+      .reduce((sum, lesson) => sum + (lesson.points || 0), 0);
+    
+    const starsEarned = Math.floor(totalPoints / 50);
+    const progressPercent = Math.round((completed / lessons.length) * 100);
+    const level = Math.floor(totalPoints / 200) + 1;
+
+    return {
+      totalPoints,
+      starsEarned,
+      lessonsCompleted: completed,
+      progressPercent,
+      level
+    };
+  };
+
+  const stats = calculateStats();
+
+  const handleLessonClick = (lesson: LessonCard) => {
+    if (!lesson.locked) {
+      setSelectedLesson(lesson);
+    }
+  };
+
+  const handleClosePopup = () => {
+    setSelectedLesson(null);
+  };
+
+  const handleAttemptQuiz = () => {
+    if (selectedLesson) {
+      // Update lessons: complete current, unlock next
+      setLessons(prev => prev.map((lesson) => {
+        if (lesson.id === selectedLesson.id) {
+          return { ...lesson, completed: true, isActive: false };
+        }
+        if (lesson.id === selectedLesson.id + 1) {
+          return { ...lesson, locked: false, isActive: true };
+        }
+        return lesson;
+      }));
+
+      // Open celebration modal instead of alert
+      setCelebrate({ open: true, points: selectedLesson.points || 0, title: selectedLesson.title });
+      setSelectedLesson(null);
+
+      // Trigger confetti
+      setTimeout(() => fireConfetti(), 50);
+
+      // Auto-close celebration after 2.5s
+      setTimeout(() => setCelebrate(c => ({ ...c, open: false })), 2500);
+    }
+  };
+
+  const handleWatchVideo = () => {
+    if (selectedLesson?.youtubeUrl) {
+      window.open(selectedLesson.youtubeUrl, '_blank');
+    }
+  };
+
+  const handleGoHome = () => {
+    alert('🏠 Navigating to home page...');
+  };
+
+  const handleDotClick = (index: number) => {
+    const scrollPosition = window.innerHeight * index * 0.3;
+    window.scrollTo({
+      top: scrollPosition,
+      behavior: 'smooth'
+    });
+    setActiveDot(index);
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const dotIndex = Math.floor(scrollPosition / (window.innerHeight * 0.3));
+      setActiveDot(Math.min(dotIndex, 3));
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (confettiTimer.current) cancelAnimationFrame(confettiTimer.current);
+    };
+  }, []);
+
+  const getIconStyle = (iconClass: string, isLocked: boolean, isCompleted: boolean) => {
+    const baseStyle: React.CSSProperties = {
+      width: "80px",
+      height: "80px",
+      margin: "20px auto",
+      borderRadius: "50%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontSize: "32px",
+      color: "white",
+      textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+      transition: "all 0.3s ease",
+      filter: isLocked ? 'grayscale(1) brightness(0.7)' : 'none',
+      border: isCompleted ? '3px solid #10b981' : '2px solid #e5e7eb',
+      boxShadow: isCompleted ? '0 0 20px rgba(16, 185, 129, 0.5)' : 'none'
+    };
+
+    const iconStyleMap: { [key: string]: React.CSSProperties } = {
+      intro: { background: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)" },
+      keys: { background: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)" },
+      practice: { background: "linear-gradient(135deg, #ec4899 0%, #be185d 100%)" },
+      review: { background: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)" },
+      play: { background: "linear-gradient(135deg, #10b981 0%, #059669 100%)" },
+      home: { background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)" }
+    };
+    
+    return { ...baseStyle, ...iconStyleMap[iconClass] };
+  };
+
+  const styles: { [key: string]: React.CSSProperties } = {
+    container: {
+      fontFamily: "monospace, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      background: "#f0f8f0",
+      minHeight: "100vh",
+      position: "relative"
+    },
+    pixelPattern: {
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: `
+        radial-gradient(circle at 25% 25%, #e8f5e8 2px, transparent 2px),
+        radial-gradient(circle at 75% 75%, #d1fae5 2px, transparent 2px),
+        linear-gradient(90deg, transparent 50%, rgba(16, 185, 129, 0.05) 50%)
+      `,
+      backgroundSize: "20px 20px, 20px 20px, 40px 40px",
+      zIndex: 0
+    },
+    homeButton: {
+      position: "fixed",
+      top: "20px",
+      left: "20px",
+      background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+      color: "white",
+      border: "3px solid #ffffff",
+      borderRadius: "8px",
+      padding: "12px 20px",
+      fontSize: "12px",
+      fontWeight: "bold",
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      gap: "8px",
+      boxShadow: "0 8px 16px rgba(16, 185, 129, 0.4), inset 0 2px 0 rgba(255,255,255,0.2)",
+      transition: "all 0.2s ease",
+      zIndex: 1000,
+      textTransform: "uppercase"
+    },
+    progressContainer: {
+      margin: "80px 20px 20px 20px",
+      zIndex: 10,
+      position: "relative"
+    },
+    progressBar: {
+      background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
+      border: "3px solid #1f2937",
+      borderRadius: "16px",
+      padding: "20px",
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+      gap: "20px",
+      boxShadow: "0 8px 32px rgba(0,0,0,0.1), inset 0 2px 0 rgba(255,255,255,0.8)"
+    },
+    progressItem: {
+      display: "flex",
+      alignItems: "center",
+      gap: "12px",
+      textAlign: "left"
+    },
+    progressIcon: {
+      fontSize: "24px",
+      width: "40px",
+      height: "40px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      background: "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)",
+      borderRadius: "8px",
+      border: "2px solid #d1d5db"
+    },
+    progressValue: {
+      fontSize: "18px",
+      fontWeight: "bold",
+      color: "#1f2937",
+      lineHeight: 1
+    },
+    progressLabel: {
+      fontSize: "10px",
+      color: "#6b7280",
+      textTransform: "uppercase",
+      letterSpacing: "1px"
+    },
+    xpBarContainer: {
+      marginTop: "16px",
+      background: "rgba(255,255,255,0.9)",
+      border: "2px solid #e5e7eb",
+      borderRadius: "12px",
+      padding: "12px"
+    },
+    xpBarLabel: {
+      fontSize: "10px",
+      color: "#4b5563",
+      marginBottom: "8px",
+      textAlign: "center",
+      textTransform: "uppercase"
+    },
+    xpBar: {
+      height: "12px",
+      background: "#e5e7eb",
+      borderRadius: "6px",
+      overflow: "hidden",
+      border: "1px solid #d1d5db"
+    },
+    xpBarFill: {
+      height: "100%",
+      background: "linear-gradient(90deg, #10b981 0%, #34d399 100%)",
+      borderRadius: "6px",
+      transition: "width 0.5s ease",
+      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3)"
+    },
+    contentContainer: {
+      maxWidth: "1400px",
+      margin: "0 auto",
+      padding: "20px",
+      position: "relative",
+      zIndex: 10
+    },
+    sectionTitle: {
+      fontSize: "clamp(18px, 4vw, 28px)",
+      color: "#1f2937",
+      margin: "30px 0 40px 0",
+      textAlign: "center",
+      fontWeight: "bold",
+      textTransform: "uppercase",
+      letterSpacing: "2px",
+      textShadow: "2px 2px 0px #ffffff, 4px 4px 0px #e5e7eb",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: "20px"
+    },
+    titleEmoji: {
+      fontSize: "clamp(20px, 5vw, 32px)",
+      filter: "drop-shadow(2px 2px 4px rgba(0,0,0,0.2))"
+    },
+    lessonsGrid: {
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+      gap: "24px",
+      marginBottom: "50px"
+    },
+    lessonCard: {
+      background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
+      border: "3px solid #e5e7eb",
+      borderRadius: "16px",
+      padding: "24px",
+      textAlign: "center",
+      transition: "all 0.3s ease",
+      position: "relative",
+      minHeight: "240px",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
+      boxShadow: "0 8px 16px rgba(0,0,0,0.1), inset 0 2px 0 rgba(255,255,255,0.8)"
+    },
+    lessonCardLocked: {
+      opacity: 0.6,
+      background: "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)",
+      border: "3px solid #d1d5db"
+    },
+    lessonCardActive: {
+      border: "3px solid #10b981",
+      boxShadow: "0 12px 24px rgba(16, 185, 129, 0.3), 0 0 0 6px rgba(16, 185, 129, 0.1)",
+      transform: "translateY(-4px) scale(1.02)",
+      background: "linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%)"
+    },
+    lessonCardCompleted: {
+      border: "3px solid #059669",
+      background: "linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)",
+      boxShadow: "0 8px 16px rgba(5, 150, 105, 0.3), inset 0 2px 0 rgba(255,255,255,0.9)"
+    },
+    lessonNumber: {
+      position: "absolute",
+      top: "12px",
+      left: "12px",
+      fontSize: "16px",
+      fontWeight: "bold",
+      color: "#1f2937",
+      background: "rgba(255,255,255,0.9)",
+      width: "32px",
+      height: "32px",
+      borderRadius: "8px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      border: "2px solid #e5e7eb"
+    },
+    lessonTitle: {
+      fontSize: "12px",
+      color: "#1f2937",
+      marginTop: "auto",
+      lineHeight: 1.4,
+      fontWeight: "bold",
+      textTransform: "uppercase",
+      letterSpacing: "0.5px"
+    },
+    lockIcon: {
+      position: "absolute",
+      top: "12px",
+      right: "12px",
+      width: "28px",
+      height: "28px",
+      background: "#ef4444",
+      borderRadius: "8px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontSize: "12px",
+      color: "white",
+      border: "2px solid #ffffff",
+      boxShadow: "0 2px 4px rgba(239, 68, 68, 0.3)"
+    },
+    completedBadge: {
+      position: "absolute",
+      top: "12px",
+      right: "12px",
+      width: "28px",
+      height: "28px",
+      background: "#10b981",
+      borderRadius: "50%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontSize: "14px",
+      color: "white",
+      border: "2px solid #ffffff",
+      boxShadow: "0 2px 8px rgba(16, 185, 129, 0.4)"
+    },
+    pointsBadge: {
+      background: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
+      color: "white",
+      fontSize: "10px",
+      padding: "4px 8px",
+      borderRadius: "12px",
+      fontWeight: "bold",
+      marginTop: "8px",
+      border: "1px solid rgba(255,255,255,0.3)",
+      textShadow: "1px 1px 1px rgba(0,0,0,0.2)"
+    },
+    popupOverlay: {
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: "rgba(0, 0, 0, 0.8)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 2000,
+      backdropFilter: "blur(8px)",
+      padding: "20px"
+    },
+    popupContent: {
+      background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
+      border: "4px solid #1f2937",
+      borderRadius: "24px",
+      padding: "40px",
+      width: "90%",
+      maxWidth: "900px",
+      maxHeight: "85vh",
+      overflow: "auto",
+      position: "relative",
+      boxShadow: "0 32px 64px rgba(0, 0, 0, 0.4), inset 0 2px 0 rgba(255,255,255,0.9)"
+    },
+    closeButton: {
+      position: "absolute",
+      top: "20px",
+      right: "20px",
+      background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
+      border: "2px solid #ffffff",
+      borderRadius: "8px",
+      width: "48px",
+      height: "48px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      cursor: "pointer",
+      color: "white",
+      transition: "all 0.3s ease",
+      boxShadow: "0 4px 8px rgba(239, 68, 68, 0.3)"
+    },
+    popupHeader: {
+      textAlign: "center",
+      marginBottom: "32px"
+    },
+    popupTitle: {
+      fontSize: "clamp(18px, 4vw, 24px)",
+      fontWeight: "bold",
+      color: "#1f2937",
+      margin: "20px 0 12px 0",
+      textTransform: "uppercase",
+      letterSpacing: "1px"
+    },
+    popupPoints: {
+      fontSize: "14px",
+      color: "#f59e0b",
+      fontWeight: "bold",
+      background: "rgba(245, 158, 11, 0.1)",
+      padding: "8px 16px",
+      borderRadius: "20px",
+      display: "inline-block",
+      border: "2px solid #f59e0b"
+    },
+    popupBody: {
+      textAlign: "center"
+    },
+    popupDescription: {
+      fontSize: "14px",
+      lineHeight: 1.6,
+      color: "#4b5563",
+      marginBottom: "32px",
+      textAlign: "left"
+    },
+    popupActions: {
+      display: "flex",
+      gap: "20px",
+      justifyContent: "center",
+      flexWrap: "wrap"
+    },
+    videoButton: {
+      background: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
+      color: "white",
+      border: "3px solid #ffffff",
+      borderRadius: "12px",
+      padding: "16px 24px",
+      fontSize: "12px",
+      fontWeight: "bold",
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      gap: "8px",
+      transition: "all 0.3s ease",
+      boxShadow: "0 8px 16px rgba(245, 158, 11, 0.4), inset 0 2px 0 rgba(255,255,255,0.2)",
+      textTransform: "uppercase"
+    },
+    quizButton: {
+      background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+      color: "white",
+      border: "3px solid #ffffff",
+      borderRadius: "12px",
+      padding: "16px 24px",
+      fontSize: "12px",
+      fontWeight: "bold",
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      gap: "8px",
+      transition: "all 0.3s ease",
+      boxShadow: "0 8px 16px rgba(16, 185, 129, 0.4), inset 0 2px 0 rgba(255,255,255,0.2)",
+      textTransform: "uppercase"
+    },
+    // Celebration modal styles
+    celebrateOverlay: {
+      position: 'fixed',
+      inset: 0 as unknown as number, // TS hack for shorthand
+      background: 'rgba(0,0,0,0.6)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 3000
+    },
+    celebrateCard: {
+      position: 'relative',
+      background: 'linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%)',
+      border: '4px solid #10b981',
+      borderRadius: '24px',
+      padding: '32px',
+      width: '90%',
+      maxWidth: '520px',
+      textAlign: 'center',
+      boxShadow: '0 20px 60px rgba(16,185,129,0.35)'
+    },
+    celebrateTitle: {
+      fontSize: '20px',
+      fontWeight: 800 as unknown as number,
+      color: '#065f46',
+      textTransform: 'uppercase' as const,
+      letterSpacing: '1px',
+      marginTop: '8px'
+    },
+    celebratePoints: {
+      marginTop: '10px',
+      display: 'inline-block',
+      padding: '8px 14px',
+      background: 'rgba(16,185,129,0.1)',
+      border: '2px solid #10b981',
+      borderRadius: '9999px',
+      color: '#065f46',
+      fontWeight: 800 as unknown as number
+    },
+    celebrateClose: {
+      marginTop: '18px',
+      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+      color: 'white',
+      border: '3px solid #ffffff',
+      borderRadius: '12px',
+      padding: '12px 18px',
+      fontSize: '12px',
+      fontWeight: 'bold',
+      cursor: 'pointer',
+      boxShadow: '0 8px 16px rgba(16,185,129,0.4)'
+    },
+    confettiCanvas: {
+      position: 'fixed' as const,
+      pointerEvents: 'none' as const,
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      zIndex: 3500
+    },
+    scrollIndicator: {
+      position: "fixed",
+      right: "20px",
+      top: "50%",
+      transform: "translateY(-50%)",
+      display: "flex",
+      flexDirection: "column",
+      gap: "12px",
+      zIndex: 100
+    },
+    scrollDot: {
+      width: "12px",
+      height: "12px",
+      borderRadius: "50%",
+      background: "#d1d5db",
+      border: "2px solid #ffffff",
+      cursor: "pointer",
+      transition: "all 0.3s ease",
+      boxShadow: "0 2px 4px rgba(0,0,0,0.2)"
+    },
+    scrollDotActive: {
+      background: "#10b981",
+      transform: "scale(1.3)",
+      boxShadow: "0 4px 8px rgba(16, 185, 129, 0.4)"
+    }
+  };
+
+  return (
+    <div style={styles.container}>
+      <div style={styles.pixelPattern}></div>
+      
+      <button style={styles.homeButton} onClick={handleGoHome}>
+        <Home size={20} />
+        Home
+      </button>
+
+      <div style={styles.progressContainer}>
+        <div style={styles.progressBar}>
+          <div style={styles.progressItem}>
+            <div style={styles.progressIcon}>📊</div>
+            <div>
+              <div style={styles.progressValue}>{stats.progressPercent}%</div>
+              <div style={styles.progressLabel}>Progress</div>
+            </div>
+          </div>
+          
+          <div style={styles.progressItem}>
+            <div style={styles.progressIcon}>⭐</div>
+            <div>
+              <div style={styles.progressValue}>{stats.starsEarned}</div>
+              <div style={styles.progressLabel}>Stars</div>
+            </div>
+          </div>
+          
+          <div style={styles.progressItem}>
+            <div style={styles.progressIcon}>💎</div>
+            <div>
+              <div style={styles.progressValue}>{stats.totalPoints}</div>
+              <div style={styles.progressLabel}>Points</div>
+            </div>
+          </div>
+          
+          <div style={styles.progressItem}>
+            <div style={styles.progressIcon}>🏆</div>
+            <div>
+              <div style={styles.progressValue}>Lv.{stats.level}</div>
+              <div style={styles.progressLabel}>Level</div>
+            </div>
+          </div>
+        </div>
+        
+        <div style={styles.xpBarContainer}>
+          <div style={styles.xpBarLabel}>Level {stats.level} Progress</div>
+          <div style={styles.xpBar}>
+            <div 
+              style={{
+                ...styles.xpBarFill,
+                width: `${((stats.totalPoints % 200) / 200) * 100}%`
+              }}
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <div style={styles.contentContainer}>
+        <h1 style={styles.sectionTitle}>
+          <span style={styles.titleEmoji}>🎮</span>
+          EcoShala Gaming Academy
+          <span style={styles.titleEmoji}>🌱</span>
+        </h1>
+        
+        <div style={styles.lessonsGrid}>
+          {lessons.map((lesson) => (
+            <div 
+              key={lesson.id} 
+              style={{
+                ...styles.lessonCard,
+                ...(lesson.locked ? styles.lessonCardLocked : {}),
+                ...(lesson.isActive ? styles.lessonCardActive : {}),
+                ...(lesson.completed ? styles.lessonCardCompleted : {}),
+                cursor: lesson.locked ? 'not-allowed' : 'pointer'
+              }}
+              onClick={() => handleLessonClick(lesson)}
+            >
+              <div style={styles.lessonNumber}>{lesson.id}</div>
+              
+              {lesson.locked && (
+                <div style={styles.lockIcon}>🔒</div>
+              )}
+              
+              {lesson.completed && (
+                <div style={styles.completedBadge}>✓</div>
+              )}
+              
+              <div style={getIconStyle(lesson.iconClass, lesson.locked, lesson.completed || false)}>
+                {lesson.icon}
+              </div>
+              
+              <div style={styles.lessonTitle}>{lesson.title}</div>
+              
+              {lesson.points && (
+                <div style={styles.pointsBadge}>
+                  +{lesson.points} pts
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {selectedLesson && (
+        <div style={styles.popupOverlay} onClick={handleClosePopup}>
+          <div style={styles.popupContent} onClick={(e) => e.stopPropagation()}>
+            <button style={styles.closeButton} onClick={handleClosePopup}>
+              <X size={24} />
+            </button>
+            
+            <div style={styles.popupHeader}>
+              <div style={{
+                ...getIconStyle(selectedLesson.iconClass, false, selectedLesson.completed || false), 
+                width: '100px', 
+                height: '100px', 
+                fontSize: '40px'
+              }}>
+                {selectedLesson.icon}
+              </div>
+              <h2 style={styles.popupTitle}>{selectedLesson.title}</h2>
+              <div style={styles.popupPoints}>
+                Reward: {selectedLesson.points} Points 💎
+              </div>
+            </div>
+            
+            <div style={styles.popupBody}>
+              <p style={styles.popupDescription}>
+                {selectedLesson.description}
+              </p>
+              
+              <div style={styles.popupActions}>
+                <button style={styles.videoButton} onClick={handleWatchVideo}>
+                  <Play size={20} />
+                  Watch Tutorial
+                </button>
+                
+                <button style={styles.quizButton} onClick={handleAttemptQuiz}>
+                  <BookOpen size={20} />
+                  Complete Quest
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Celebration Modal */}
+      {celebrate.open && (
+        <>
+          <canvas ref={confettiRef} style={styles.confettiCanvas} />
+          <div style={styles.celebrateOverlay}>
+            <div style={styles.celebrateCard}>
+              <div style={{
+                width: 84, height: 84, borderRadius: '50%',
+                margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'linear-gradient(135deg,#10b981 0%,#059669 100%)',
+                color: 'white', fontSize: 40, boxShadow: '0 10px 30px rgba(16,185,129,0.35)', border: '3px solid #fff'
+              }}>
+                🎉
+              </div>
+              <div style={styles.celebrateTitle}>Quest Complete!</div>
+              <div style={{ marginTop: 6, color: '#065f46', fontWeight: 700 }}>{celebrate.title}</div>
+              <div style={styles.celebratePoints}>+{celebrate.points} Points</div>
+              <button style={styles.celebrateClose} onClick={() => setCelebrate(s => ({ ...s, open: false }))}>
+                Close
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+
+      <div style={styles.scrollIndicator}>
+        {[0, 1, 2, 3].map((index) => (
+          <div 
+            key={index}
+            style={{
+              ...styles.scrollDot,
+              ...(activeDot === index ? styles.scrollDotActive : {})
+            }}
+            onClick={() => handleDotClick(index)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default EcoShala;
