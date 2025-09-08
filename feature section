@@ -1,0 +1,166 @@
+import { Suspense, useRef } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { OrbitControls, Stars, useTexture } from "@react-three/drei";
+
+function Earth() {
+  const tex = useTexture({
+    map: "https://raw.githubusercontent.com/creativetimofficial/public-assets/master/threejs/earth-day.jpg",
+    normalMap: "https://raw.githubusercontent.com/creativetimofficial/public-assets/master/threejs/earth-normal.jpg",
+    roughnessMap: "https://raw.githubusercontent.com/creativetimofficial/public-assets/master/threejs/earth-roughness.jpg",
+    emissiveMap: "https://raw.githubusercontent.com/creativetimofficial/public-assets/master/threejs/earth-night.jpg",
+    alphaMap: "https://raw.githubusercontent.com/creativetimofficial/public-assets/master/threejs/earth-clouds.png"
+  });
+  const g = useRef<any>(null);
+  const c = useRef<any>(null);
+  useFrame((_, d) => {
+    if (g.current) g.current.rotation.y += d * 0.1;
+    if (c.current) c.current.rotation.y += d * 0.12;
+  });
+  return (
+    <>
+      <group ref={g}>
+        <mesh>
+          <sphereGeometry args={[1, 64, 64]} />
+          <meshStandardMaterial
+            map={tex.map}
+            normalMap={tex.normalMap}
+            roughnessMap={tex.roughnessMap}
+            roughness={1}
+            metalness={0}
+          />
+        </mesh>
+        <mesh>
+          <sphereGeometry args={[1.001, 64, 64]} />
+          <meshStandardMaterial
+            emissive={"#ffffff"}
+            emissiveMap={tex.emissiveMap}
+            emissiveIntensity={0.5}
+            transparent
+            opacity={0.35}
+          />
+        </mesh>
+      </group>
+      <mesh ref={c}>
+        <sphereGeometry args={[1.015, 64, 64]} />
+        <meshPhongMaterial alphaMap={tex.alphaMap} transparent depthWrite={false} opacity={0.6} />
+      </mesh>
+    </>
+  );
+}
+
+export const FeatureSection = () => {
+  return (
+    <div className="bg-background">
+      {/* Eco concepts that click - Full width with 3D rotating Earth */}
+      <section className="py-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left side - Live 3D Earth (replaces old frame/heart/icons) */}
+            <div className="relative">
+              <div className="relative h-[360px] w-full rounded-3xl overflow-hidden">
+                <Canvas camera={{ position: [0, 0, 2.8], fov: 45 }}>
+                  <color attach="background" args={["#f8fafc"]} />
+                  <ambientLight intensity={0.5} />
+                  <directionalLight intensity={1.2} position={[3, 2, 2]} />
+                  <directionalLight intensity={0.3} position={[-3, -2, -2]} />
+                  <Suspense fallback={null}>
+                    <Earth />
+                    <Stars radius={50} depth={20} count={1500} factor={3} fade />
+                  </Suspense>
+                  <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.6} />
+                </Canvas>
+              </div>
+            </div>
+
+            {/* Right side - Content (unchanged) */}
+            <div>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
+                Eco concepts that click
+              </h2>
+              <p className="text-xl text-foreground/70 leading-relaxed">
+                Interactive lessons make environmental concepts easy to understand. Instant feedback helps you become an eco-champion.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Learn at your impact level - Full width with eco course cards (unchanged) */}
+      <section className="py-24 px-6 bg-muted/10">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
+                Learn at your impact level
+              </h2>
+              <p className="text-xl text-foreground/70 leading-relaxed">
+                Start with simple eco-actions or tackle complex environmental challenges. Perfect for eco-warriors of all ages.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-white rounded-2xl p-6 border border-eco-green/20 relative overflow-hidden">
+                <div className="absolute top-4 right-4 bg-eco-green text-white px-3 py-1 rounded-full text-xs font-bold">
+                  🌱 FOR YOU
+                </div>
+                <div className="mb-4">
+                  <div className="w-16 h-16 bg-eco-green/10 rounded-2xl flex items-center justify-center mb-4">
+                    {/* icon removed */}
+                    <div className="w-8 h-8 rounded bg-eco-green" />
+                  </div>
+                </div>
+                <h3 className="text-lg font-bold text-foreground mb-2">Sustainable Living</h3>
+              </div>
+
+              <div className="bg-white rounded-2xl p-6 border border-border/20">
+                <div className="mb-4">
+                  <div className="w-16 h-16 bg-eco-yellow/10 rounded-2xl flex items-center justify-center mb-4">
+                    <div className="w-8 h-8 bg-eco-yellow rounded"></div>
+                  </div>
+                </div>
+                <h3 className="text-lg font-bold text-foreground mb-2">Renewable Energy</h3>
+              </div>
+
+              <div className="bg-white rounded-2xl p-6 border border-border/20">
+                <div className="mb-4">
+                  <div className="w-16 h-16 bg-eco-blue/10 rounded-2xl flex items-center justify-center mb-4">
+                    <div className="w-8 h-8 bg-eco-blue rounded"></div>
+                  </div>
+                </div>
+                <h3 className="text-lg font-bold text-foreground mb-2">Water Conservation</h3>
+              </div>
+
+              <div className="bg-white rounded-2xl p-6 border border-border/20">
+                <div className="mb-4">
+                  <div className="w-16 h-16 bg-eco-brown/10 rounded-2xl flex items-center justify-center mb-4">
+                    <div className="w-8 h-8 rounded bg-eco-brown" />
+                  </div>
+                </div>
+                <h3 className="text-lg font-bold text-foreground mb-2">Recycling Mastery</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stay eco-motivated (unchanged) */}
+      <section className="py-24 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="mb-8 flex justify-center">
+            <div className="w-20 h-20 bg-eco-green/10 rounded-2xl flex items-center justify-center">
+              <div className="w-10 h-10 rounded bg-eco-green" />
+            </div>
+          </div>
+
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
+            Stay eco-motivated
+          </h2>
+
+          <p className="text-xl text-foreground/70 leading-relaxed max-w-2xl mx-auto">
+            Make every day greener with engaging eco-lessons, rewards for green actions, and daily environmental inspiration.
+          </p>
+        </div>
+      </section>
+    </div>
+  );
+};
